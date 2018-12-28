@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConsumerController {
     @PostMapping("/register")
     public int register(@RequestBody ConsumerRegister consumerRegister){
-        return 2;
+        return 1;
     }
 
 }
