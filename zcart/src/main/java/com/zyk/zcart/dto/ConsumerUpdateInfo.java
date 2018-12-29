@@ -5,27 +5,19 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 public class ConsumerUpdateInfo {
-    private String firstName;
-    private String lastName;
+    private String name;
+
     @Email
     private String email;
     @Size(min = 11, max = 20)
     private String mobile;
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
