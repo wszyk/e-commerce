@@ -1,10 +1,10 @@
 package com.zyk.projectadminapi;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+
+@SpringBootApplication(scanBasePackages="com.zyk")
 public class ProjectAdminApiApplication {
 
     public static void main(String[] args) {

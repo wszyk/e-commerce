@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-@Service
+@Service("userService")
 @EnableAutoConfiguration
 public class UserServiceImpl implements UserService {
 
@@ -25,7 +25,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByUsername(String username) {
-        return null;
+        User user = userMapper.selectByUsername(username);
+        return user;
     }
 
     @Override

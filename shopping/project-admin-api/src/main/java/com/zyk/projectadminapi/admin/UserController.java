@@ -3,8 +3,8 @@ package com.zyk.projectadminapi.admin;
 import com.zyk.projectadminapi.exception.BackendClientException;
 import com.zyk.projectservice.dto.AddUser;
 import com.zyk.projectservice.po.User;
-import com.zyk.projectservice.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zyk.projectservice.service.UserService;
+ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/Admin/User")
 public class UserController {
 
-    @Autowired(required=true)
-    private UserServiceImpl userService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/getById")
     public User getById(@RequestParam Long userId){
