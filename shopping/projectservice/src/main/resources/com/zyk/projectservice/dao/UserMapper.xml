@@ -10,6 +10,10 @@
     <result column="encrypted_password" jdbcType="CHAR" property="encryptedPassword" />
     <result column="roles" jdbcType="VARCHAR" property="roles" />
   </resultMap>
+  <resultMap id="UserListDTO" type="com.zyk.projectservice.dto.UserListDTO">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+  </resultMap>
   <sql id="Base_Column_List">
     user_id, username, name, email, avatar_url, encrypted_password, roles
   </sql>
@@ -120,4 +124,7 @@
       roles = #{roles,jdbcType=VARCHAR}
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
+  <select id="selectWithPage" resultMap="UserListDTO">
+    select user_id,username from user
+  </select>
 </mapper>

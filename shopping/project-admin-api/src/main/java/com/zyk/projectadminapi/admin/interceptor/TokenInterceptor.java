@@ -14,7 +14,7 @@ import java.util.*;
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
 
-    private String[] urls = {"/user/login","/error"};
+    private String[] urls = {"/Admin/user/login","/error"};
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -48,7 +48,8 @@ public class TokenInterceptor implements HandlerInterceptor {
         if (username == null || username.isEmpty()){
             throw new BackendUnauthenticationException("Unauthentication: username is null or empty");
         }
-        if (currentTimestamp > expireTimestamp){
+        System.out.println("");
+        if (currentTimestamp < expireTimestamp){
             throw new BackendUnauthenticationException("Unauthentication: token is expired");
         }
 
