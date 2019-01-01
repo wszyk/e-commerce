@@ -7,6 +7,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/projectservice/pom.xml" />
         <option value="$PROJECT_DIR$/project-admin-api/pom.xml" />
+        <option value="$PROJECT_DIR$/project-store-api/pom.xml" />
       </list>
     </option>
   </component>

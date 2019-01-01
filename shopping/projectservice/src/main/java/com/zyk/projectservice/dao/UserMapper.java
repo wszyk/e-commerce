@@ -1,5 +1,7 @@
 package com.zyk.projectservice.dao;
 
+import com.github.pagehelper.Page;
+import com.zyk.projectservice.dto.UserListDTO;
 import com.zyk.projectservice.po.User;
 
 public interface UserMapper {
@@ -16,4 +18,6 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    Page<UserListDTO> selectWithPage();
 }
