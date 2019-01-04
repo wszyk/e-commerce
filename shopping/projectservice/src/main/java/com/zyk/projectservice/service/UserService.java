@@ -18,4 +18,6 @@ public interface UserService {
 
     PageInfo<UserListDTO> getUsersWithPage(Integer pageNum);
 
+    void batchDelete(Integer[] userIds);
+
 }

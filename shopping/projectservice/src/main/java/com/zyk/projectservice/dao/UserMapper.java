@@ -3,6 +3,7 @@ package com.zyk.projectservice.dao;
 import com.github.pagehelper.Page;
 import com.zyk.projectservice.dto.UserListDTO;
 import com.zyk.projectservice.po.User;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Long userId);
@@ -20,4 +21,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     Page<UserListDTO> selectWithPage();
+
+    void batchDelete(@Param("userIds") Integer[] userIds);
 }

@@ -127,4 +127,11 @@
   <select id="selectWithPage" resultMap="UserListDTO">
     select user_id,username from user
   </select>
+  <delete id="batchDelete">
+    delete from user
+    where user_id in
+    <foreach collection="userIds" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+  </delete>
 </mapper>
