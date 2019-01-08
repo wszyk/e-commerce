@@ -29,8 +29,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User selectByEmail(String email) {
+        User user = userMapper.selectByEmail(email);
+        return user;
+    }
+
+    @Override
     public User getByUsername(String username) {
-        User user = userMapper.selectByUsername(username);
+        User user = userMapper.getByUsername(username);
         return user;
     }
 
@@ -49,11 +55,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(UserUpdateDTO userUpdateDTO) {
 
-        User user = userMapper.selectByPrimaryKey(userUpdateDTO.getUserId());
-        user.setUsername(userUpdateDTO.getUsername());
-        user.setName(userUpdateDTO.getName());
-        user.setAvatarUrl(userUpdateDTO.getAvatarUrl());
-        user.setEmail(userUpdateDTO.getEmail());
+        User user = userMapper.selectByEmail(userUpdateDTO.getEmail());
+//        user.setUsername(userUpdateDTO.getUsername());
+//        user.setName(userUpdateDTO.getName());
+//        user.setAvatarUrl(userUpdateDTO.getAvatarUrl());
         user.setEncryptedPassword(DigestUtils.md5DigestAsHex(userUpdateDTO.getPassword().getBytes()));
         userMapper.updateByPrimaryKey(user);
     }

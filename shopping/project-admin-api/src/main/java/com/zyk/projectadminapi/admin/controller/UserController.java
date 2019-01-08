@@ -70,15 +70,22 @@ public class UserController {
 
 
     @GetMapping("/resetPassword")
-    public void resetPassword(String email){
+    public void resetPassword(String email) throws BackendClientException {
 
         int authcode=(int)((Math.random()*9+1)*100000);
         String str = String.valueOf(authcode);
-        MailService.sendSimpleMail("1342944009@qq.com","test simple mail",str);
-        //1. 随机生成随机码
-        //2. 发送随机到email
-        //3. email as key ,random code as value, store to redis (expire time)
-      redisTemplate.opsForValue().set(email,str);
+
+
+        User user = userService.selectByEmail(email);
+        if(user==null){
+            throw new BackendClientException("The E-Mail Address was not found in our records");
+        }else {
+            MailService.sendSimpleMail(email,"test simple mail",str);
+            //1. 随机生成随机码
+            //2. 发送随机到email
+            //3. email as key ,random code as value, store to redis (expire time)
+            redisTemplate.opsForValue().set(email,str);
+        }
     }
 
     @GetMapping("/verifyCode")
@@ -100,9 +107,8 @@ public class UserController {
         System.out.println(email+password);
         String authorizationStr = request.getHeader("Authorization");
         System.out.println(authorizationStr);
+        changePassword(email,password);
         //自定修改，返回Token，授权一个修改密码的api
-
-
     }
 
     @PostMapping("/changePassword")

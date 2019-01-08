@@ -23,11 +23,17 @@
     from user
     where user_id = #{userId,jdbcType=BIGINT}
   </select>
-  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="getByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from user
     where username = #{username,jdbcType=BIGINT}
+  </select>
+  <select id="selectByEmail" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where email = #{email,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from user

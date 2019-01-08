@@ -10,6 +10,8 @@ public interface UserService {
 
     User getById(Long userId);
 
+    User selectByEmail(String email);
+
     User getByUsername(String username);
 
     void add(AddUser user);
