@@ -1,12 +1,9 @@
 package com.zyk.projectadminapi.admin.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.zyk.projectadminapi.admin.dto.Authcode;
 import com.zyk.projectadminapi.admin.dto.LoginInfo;
 import com.zyk.projectadminapi.admin.exception.BackendClientException;
-import com.zyk.projectadminapi.admin.mail.MailService;
 import com.zyk.projectservice.dto.AddUser;
 import com.zyk.projectservice.dto.UserListDTO;
 import com.zyk.projectservice.dto.UserUpdateDTO;
@@ -14,9 +11,7 @@ import com.zyk.projectservice.po.User;
 import com.zyk.projectservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,19 +66,13 @@ public class UserController {
 
     @GetMapping("/resetPassword")
     public void resetPassword(String email) throws BackendClientException {
-
         int authcode=(int)((Math.random()*9+1)*100000);
         String str = String.valueOf(authcode);
-
-
         User user = userService.selectByEmail(email);
         if(user==null){
             throw new BackendClientException("The E-Mail Address was not found in our records");
         }else {
             MailService.sendSimpleMail(email,"test simple mail",str);
-            //1. 随机生成随机码
-            //2. 发送随机到email
-            //3. email as key ,random code as value, store to redis (expire time)
             redisTemplate.opsForValue().set(email,str);
         }
     }
@@ -98,17 +87,10 @@ public class UserController {
          if(!code.equals(rediscode)){
              throw new BackendClientException("email verify code is invalid");
          }
-//        changePassword(email,password);
-        //1. get code by email from redis
-        //   code null 过期 抛异常
-        //2. compare input code with redis code
-        //3. 相同验证通过，密码重置123456，
-        //   否则验证不同 throw exception
-        System.out.println(email+password);
-        String authorizationStr = request.getHeader("Authorization");
-        System.out.println(authorizationStr);
+//        System.out.println(email+password);
+//        String authorizationStr = request.getHeader("Authorization");
+//        System.out.println(authorizationStr);
         changePassword(email,password);
-        //自定修改，返回Token，授权一个修改密码的api
     }
 
     @PostMapping("/changePassword")
