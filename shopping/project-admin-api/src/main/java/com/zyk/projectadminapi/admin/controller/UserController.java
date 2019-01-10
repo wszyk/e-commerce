@@ -12,13 +12,17 @@ import com.zyk.projectservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
+@CrossOrigin
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/Admin/user")
@@ -64,6 +68,7 @@ public class UserController {
     }
 
 
+    @Async
     @GetMapping("/resetPassword")
     public void resetPassword(String email) throws BackendClientException {
         int authcode=(int)((Math.random()*9+1)*100000);
@@ -87,9 +92,6 @@ public class UserController {
          if(!code.equals(rediscode)){
              throw new BackendClientException("email verify code is invalid");
          }
-//        System.out.println(email+password);
-//        String authorizationStr = request.getHeader("Authorization");
-//        System.out.println(authorizationStr);
         changePassword(email,password);
     }
 
@@ -112,7 +114,13 @@ public class UserController {
     }
 
     @PostMapping("/batchDelete")
-    public void batchDelete(@RequestBody Integer[] userIds){
+    public void batchDelete(@RequestBody Integer[] userIds, @RequestAttribute Integer currentUserId) throws BackendClientException {
+
+        List<Integer> list = Arrays.asList(userIds);
+        boolean contains = list.contains(currentUserId);
+        if (contains){
+            throw new BackendClientException("cannot delete current user");
+        }
         userService.batchDelete(userIds);
     }
 }

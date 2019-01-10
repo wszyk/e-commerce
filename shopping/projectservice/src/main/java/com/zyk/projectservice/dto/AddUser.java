@@ -1,11 +1,22 @@
 package com.zyk.projectservice.dto;
 
+import java.util.List;
+
 public class AddUser {
     private String username;
      private String name;
     private String email;
     private String password;
     private String avatarUrl;
+    private List<String> roles;
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 
     public String getUsername() {
         return username;

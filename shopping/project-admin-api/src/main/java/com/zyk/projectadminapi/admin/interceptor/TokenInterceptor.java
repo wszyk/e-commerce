@@ -14,18 +14,29 @@ import java.util.*;
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
 
-    private String[] urls = {"/Admin/user/login","/error"};
+    private String[] urls = {
+            "/Admin/user/login",
+            "/error",
+            "/Admin/user/resetPassword",
+            "/Admin/user/verifyCode"
+    };
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //判断是否为预检请求
+        String method = request.getMethod();
+        if (method.equals("OPTIONS")){
+            return true;
+        }
         boolean contains = Arrays.asList(urls).contains(request.getRequestURI());
         if (contains){
             return true;
         }
         String authorizationStr = request.getHeader("Authorization");
-        if (authorizationStr == null){
-            throw new BackendUnauthenticationException("Unauthentication");
+        if (authorizationStr == null|| authorizationStr.equals("undefined")){
+           throw new BackendUnauthenticationException("Unauthentication");
         }
+
         String[] s = authorizationStr.split(" ");
         String token = s[1];
         LoginInfo loginInfo;
@@ -49,11 +60,11 @@ public class TokenInterceptor implements HandlerInterceptor {
             throw new BackendUnauthenticationException("Unauthentication: username is null or empty");
         }
         System.out.println("");
-        if (currentTimestamp < expireTimestamp){
+        if (currentTimestamp > expireTimestamp){
             throw new BackendUnauthenticationException("Unauthentication: token is expired");
         }
 
-        request.setAttribute("userId",userId);
+        request.setAttribute("currentUserId",userId);
         request.setAttribute("username",username);
 
         return true;

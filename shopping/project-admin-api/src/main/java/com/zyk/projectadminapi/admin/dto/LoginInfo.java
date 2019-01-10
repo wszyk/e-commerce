@@ -15,7 +15,7 @@ public class LoginInfo {
         this.roles = roles;
         this.issuedAt = issuedAt;
         long issuedAtTimestamp = issuedAt.getTime();
-        long expirationTimestamp = issuedAtTimestamp + 10*60*1000;
+        long expirationTimestamp = issuedAtTimestamp + 60*60*1000;
         this.expirationTime = new Date(expirationTimestamp);
     }
 

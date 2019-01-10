@@ -1,5 +1,6 @@
 package com.zyk.projectservice.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(addUser.getEmail());
         user.setAvatarUrl(addUser.getAvatarUrl());
         user.setEncryptedPassword(DigestUtils.md5DigestAsHex(addUser.getPassword().getBytes()));
-        user.setRoles(Constant.rolesStr);
+        user.setRoles(JSON.toJSONString(addUser.getRoles()));
         userMapper.insert(user);
     }
 
