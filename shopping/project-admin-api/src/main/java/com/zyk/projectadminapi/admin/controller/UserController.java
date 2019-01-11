@@ -15,12 +15,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.io.FileOutputStream;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -122,5 +121,26 @@ public class UserController {
             throw new BackendClientException("cannot delete current user");
         }
         userService.batchDelete(userIds);
+    }
+    @PostMapping("/uploadAvatar")
+    public String uploadAvatar(@RequestParam("file") MultipartFile file) throws Exception {
+        //List<MultipartFile> unsupportTypes = files.stream().filter(f -> !f.getContentType().equals("image/png") && !f.getContentType().equals("image/jpeg")).collect(Collectors.toList());
+        String contentType = file.getContentType();
+        if (!contentType.equals("image/png") && !contentType.equals("image/jpeg")){
+            throw new BackendClientException("file only support png or jpg");
+        }
+
+        String uuid = UUID.randomUUID().toString();
+        String type = file.getContentType();
+        type = type.split("/")[1];
+        String fileName = String.format("%s.%s",uuid,type);
+        String url = String.format("avatarimg/%s", fileName);
+        storeAvatar(file.getBytes(),url);
+        return fileName;
+    }
+    private void storeAvatar(byte[] imgData, String fileName) throws Exception {
+        FileOutputStream out = new FileOutputStream(fileName);
+        out.write(imgData);
+        out.close();
     }
 }
