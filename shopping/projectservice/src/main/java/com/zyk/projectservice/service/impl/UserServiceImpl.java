@@ -16,6 +16,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.List;
+
 @Service("userService")
 @EnableAutoConfiguration
 public class UserServiceImpl implements UserService {
@@ -57,10 +59,13 @@ public class UserServiceImpl implements UserService {
     public void update(UserUpdateDTO userUpdateDTO) {
 
         User user = userMapper.selectByEmail(userUpdateDTO.getEmail());
-//        user.setUsername(userUpdateDTO.getUsername());
-//        user.setName(userUpdateDTO.getName());
-//        user.setAvatarUrl(userUpdateDTO.getAvatarUrl());
+        user.setUsername(userUpdateDTO.getUsername());
+        user.setName(userUpdateDTO.getName());
+        user.setAvatarUrl(userUpdateDTO.getAvatarUrl());
         user.setEncryptedPassword(DigestUtils.md5DigestAsHex(userUpdateDTO.getPassword().getBytes()));
+        List<String> roles = userUpdateDTO.getRoles();
+        String join = String.join(",", roles);
+        user.setRoles(join);
         userMapper.updateByPrimaryKey(user);
     }
 

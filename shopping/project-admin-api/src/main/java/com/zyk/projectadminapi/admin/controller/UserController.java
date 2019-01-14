@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileOutputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -138,7 +139,25 @@ public class UserController {
         storeAvatar(file.getBytes(),url);
         return fileName;
     }
+//    @PostMapping("/uploadAvatars")
+//    public void uploadAvatars(@RequestParam("files") List<MultipartFile> files) throws Exception {
+//        //不符合条件的类型
+//        List<MultipartFile> unsupportTypes = files.stream().filter(f -> !f.getContentType().equals("image/png") && !f.getContentType().equals("image/jpeg")).collect(Collectors.toList());
+//        if (unsupportTypes.size() > 0){
+//            throw new BackendClientException("file only support png or jpg");
+//        }
+//
+//        for (MultipartFile file :
+//                files) {
+//            String uuid = UUID.randomUUID().toString();
+//            String type = file.getContentType();
+//            type = type.split("/")[1];
+//            String url = String.format("avatarimg/%s.%s", uuid, type);
+//            storeAvatar(file.getBytes(),url);
+//        }
+//    }
     private void storeAvatar(byte[] imgData, String fileName) throws Exception {
+        System.out.println(fileName);
         FileOutputStream out = new FileOutputStream(fileName);
         out.write(imgData);
         out.close();
