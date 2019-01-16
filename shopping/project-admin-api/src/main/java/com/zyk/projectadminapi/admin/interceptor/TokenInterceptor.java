@@ -18,7 +18,9 @@ public class TokenInterceptor implements HandlerInterceptor {
             "/Admin/user/login",
             "/error",
             "/Admin/user/resetPassword",
-            "/Admin/user/verifyCode"
+            "/Admin/user/verifyCode",
+            "/Admin/user/getVerify",
+            "/Admin/user/checkVerify"
     };
 
     @Override

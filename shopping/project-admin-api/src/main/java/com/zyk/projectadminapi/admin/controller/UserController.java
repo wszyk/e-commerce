@@ -4,30 +4,37 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.zyk.projectadminapi.admin.dto.LoginInfo;
 import com.zyk.projectadminapi.admin.exception.BackendClientException;
+import com.zyk.projectadminapi.admin.utils.RandomCodeUtil;
 import com.zyk.projectservice.dto.AddUser;
 import com.zyk.projectservice.dto.UserListDTO;
 import com.zyk.projectservice.dto.UserUpdateDTO;
 import com.zyk.projectservice.po.User;
 import com.zyk.projectservice.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.FileOutputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
+@EnableAsync
 @EnableAutoConfiguration
 @RequestMapping("/Admin/user")
 public class UserController {
 
+
+    Logger logger = LoggerFactory.getLogger(RandomCodeUtil.class);
     @Autowired
     private UserService userService;
     @Autowired
@@ -68,7 +75,7 @@ public class UserController {
     }
 
 
-    @Async
+
     @GetMapping("/resetPassword")
     public void resetPassword(String email) throws BackendClientException {
         int authcode=(int)((Math.random()*9+1)*100000);
@@ -135,9 +142,9 @@ public class UserController {
         String type = file.getContentType();
         type = type.split("/")[1];
         String fileName = String.format("%s.%s",uuid,type);
-        String url = String.format("avatarimg/%s", fileName);
+        String url = String.format("D:/Baw/实训/电商/project/shopping-front/avatarimg/%s", fileName);
         storeAvatar(file.getBytes(),url);
-        return fileName;
+        return url;
     }
 //    @PostMapping("/uploadAvatars")
 //    public void uploadAvatars(@RequestParam("files") List<MultipartFile> files) throws Exception {
@@ -161,5 +168,38 @@ public class UserController {
         FileOutputStream out = new FileOutputStream(fileName);
         out.write(imgData);
         out.close();
+    }
+
+    @GetMapping("/getVerify")
+    public void getVerify(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            response.setContentType("image/jpeg");//设置相应类型,告诉浏览器输出的内容为图片
+            response.setHeader("Pragma", "No-cache");//设置响应头信息，告诉浏览器不要缓存此内容
+            response.setHeader("Cache-Control", "no-cache");
+            response.setDateHeader("Expire", 0);
+            RandomCodeUtil randomValidateCode = new RandomCodeUtil();
+            randomValidateCode.getRandcode(request, response);//输出验证码图片方法
+        } catch (Exception e) {
+            logger.error("获取验证码失败>>>> ", e);
+        }
+    }
+    @PostMapping(value = "/checkVerify", headers = "Accept=application/json")
+    public boolean checkVerify(@RequestBody Map<String, Object> requestMap, HttpSession session) {
+        try{
+            //从session中获取随机数
+            String inputStr = requestMap.get("inputStr").toString();
+            String random = (String) session.getAttribute("RANDOMVALIDATECODEKEY");
+            if (random == null) {
+                return false;
+            }
+            if (random.equals(inputStr)) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e){
+            logger.error("验证码校验失败", e);
+            return false;
+        }
     }
 }

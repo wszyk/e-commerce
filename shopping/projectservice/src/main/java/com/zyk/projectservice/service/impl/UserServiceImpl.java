@@ -58,10 +58,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(UserUpdateDTO userUpdateDTO) {
 
-        User user = userMapper.selectByEmail(userUpdateDTO.getEmail());
+        User user = userMapper.selectByPrimaryKey(userUpdateDTO.getUserId());
         user.setUsername(userUpdateDTO.getUsername());
         user.setName(userUpdateDTO.getName());
         user.setAvatarUrl(userUpdateDTO.getAvatarUrl());
+        user.setEmail(userUpdateDTO.getEmail());
         user.setEncryptedPassword(DigestUtils.md5DigestAsHex(userUpdateDTO.getPassword().getBytes()));
         List<String> roles = userUpdateDTO.getRoles();
         String join = String.join(",", roles);
