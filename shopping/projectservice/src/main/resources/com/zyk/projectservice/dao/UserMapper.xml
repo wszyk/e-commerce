@@ -136,8 +136,13 @@
   <delete id="batchDelete">
     delete from user
     where user_id in
-    <foreach collection="userIds" open="(" close=")" separator="," item="id">
+    <foreach close=")" collection="userIds" item="id" open="(" separator=",">
       #{id}
     </foreach>
   </delete>
+
+
+  <!--sdfdsfds-->
+
+
 </mapper>

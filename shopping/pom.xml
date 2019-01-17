@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>projectservice</module>
+        <module>project-store-api</module>
         <module>project-admin-api</module>
     </modules>
     <packaging>pom</packaging>

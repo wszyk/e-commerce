@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zyk.projectservice.dao.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.zyk.projectservice.po.Category">
+    <id column="categoryid" jdbcType="INTEGER" property="categoryid" />
+    <result column="categoryname" jdbcType="VARCHAR" property="categoryname" />
+    <result column="parentid" jdbcType="INTEGER" property="parentid" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap2" type="com.zyk.projectservice.dto.CategoryListDTO">
+    <id column="categoryid" jdbcType="INTEGER" property="categoryId" />
+    <result column="categoryname" jdbcType="VARCHAR" property="name" />
+    <result column="parentname" jdbcType="VARCHAR" property="parentname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    categoryid, categoryname, parentid, level
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from category
+    where categoryid = #{categoryid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from category
+    where categoryid = #{categoryid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zyk.projectservice.po.Category">
+    insert into category (categoryid, categoryname, parentid, 
+      level)
+    values (#{categoryid,jdbcType=INTEGER}, #{categoryname,jdbcType=VARCHAR}, #{parentid,jdbcType=INTEGER}, 
+      #{level,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zyk.projectservice.po.Category">
+    insert into category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="categoryid != null">
+        categoryid,
+      </if>
+      <if test="categoryname != null">
+        categoryname,
+      </if>
+      <if test="parentid != null">
+        parentid,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="categoryid != null">
+        #{categoryid,jdbcType=INTEGER},
+      </if>
+      <if test="categoryname != null">
+        #{categoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null">
+        #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zyk.projectservice.po.Category">
+    update category
+    <set>
+      <if test="categoryname != null">
+        categoryname = #{categoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null">
+        parentid = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+    </set>
+    where categoryid = #{categoryid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zyk.projectservice.po.Category">
+    update category
+    set categoryname = #{categoryname,jdbcType=VARCHAR},
+      parentid = #{parentid,jdbcType=INTEGER},
+      level = #{level,jdbcType=INTEGER}
+    where categoryid = #{categoryid,jdbcType=INTEGER}
+  </update>
+
+  <select id="getCategories"  resultMap="BaseResultMap2">
+   select c1.*,c2.categoryname parentname from category c1 left join category c2 on
+c1.parentid=c2.categoryid
+  </select>
+
+</mapper>
