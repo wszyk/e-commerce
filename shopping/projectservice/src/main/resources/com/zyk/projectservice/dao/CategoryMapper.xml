@@ -91,4 +91,18 @@
 c1.parentid=c2.categoryid
   </select>
 
+  <select id="getAllParents"  resultMap="BaseResultMap">
+  select * from category  where level =  0
+  </select>
+
+
+  <delete id="batchDelete">
+    delete from category
+    where categoryid in
+    <foreach close=")" collection="categoryIds" item="id" open="(" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+
 </mapper>
