@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.zyk.projectadminapi.admin.dto.LoginInfo;
 import com.zyk.projectadminapi.admin.exception.BackendClientException;
+import com.zyk.projectadminapi.admin.utils.AES;
 import com.zyk.projectservice.dto.AddUser;
 import com.zyk.projectservice.dto.UserListDTO;
 import com.zyk.projectservice.dto.UserUpdateDTO;
 import com.zyk.projectservice.po.User;
 import com.zyk.projectservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -34,6 +36,9 @@ public class UserController {
     @Autowired
     RedisTemplate redisTemplate;
 
+    @Value("${token.aes.secret}")
+    private String aesSecret;
+
     @GetMapping("/getById")
     public User getById(@RequestParam Long userId){
         User user = userService.getById(userId);
@@ -50,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login(String username, String password) throws BackendClientException {
+    public String login(String username, String password) throws Exception {
         User user = userService.getByUsername(username);
         if (user == null){
             throw new BackendClientException("user doesn't exist");
@@ -62,7 +67,7 @@ public class UserController {
         LoginInfo loginInfo = new LoginInfo(user.getUserId(), user.getUsername(), user.getRoles(), new Date());
         String loginInfoStr = JSON.toJSONString(loginInfo);
         //todo encrypt token
-        String token = Base64.getEncoder().encodeToString(loginInfoStr.getBytes());
+        String token = AES.encrypt(loginInfoStr, aesSecret);
         return token;
     }
 

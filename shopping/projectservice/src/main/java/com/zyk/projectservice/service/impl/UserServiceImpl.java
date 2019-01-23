@@ -58,7 +58,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(UserUpdateDTO userUpdateDTO) {
 
-        User user = userMapper.selectByPrimaryKey(userUpdateDTO.getUserId());
+        User user = userMapper.selectByEmail(userUpdateDTO.getEmail());
+//        User user = userMapper.selectByPrimaryKey(userUpdateDTO.getUserId());
         user.setUsername(userUpdateDTO.getUsername());
         user.setName(userUpdateDTO.getName());
         user.setAvatarUrl(userUpdateDTO.getAvatarUrl());
